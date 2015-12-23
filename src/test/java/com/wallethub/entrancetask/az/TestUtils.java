@@ -31,4 +31,17 @@ public class TestUtils {
         return RandomStringUtils.random(length, true, true);
     }
 
+    static boolean eq(Collection c1, Collection c2) {
+        if (c1 == c2) return true;
+        if (c1 == null || c2 == null) return false;
+
+        if (c1.size() != c2.size()) return false;
+
+        for (Object o : c1) {
+            if (!c2.contains(o))
+                return false;
+        }
+
+        return true;
+    }
 }

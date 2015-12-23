@@ -1,6 +1,5 @@
 package com.wallethub.entrancetask.az;
 
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Collection;
@@ -10,7 +9,7 @@ import java.util.Map;
 import static com.wallethub.entrancetask.az.Task1.commonBoundariesCheck;
 import static com.wallethub.entrancetask.az.Task1.isPalindrome;
 import static com.wallethub.entrancetask.az.Task1.isPalindromeEfficient;
-import static com.wallethub.entrancetask.az.Utils.generateStringCollection;
+import static com.wallethub.entrancetask.az.TestUtils.generateStringCollection;
 import static com.wallethub.entrancetask.az.Utils.out;
 import static com.wallethub.entrancetask.az.Utils.t;
 import static java.lang.String.valueOf;
