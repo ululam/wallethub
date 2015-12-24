@@ -25,17 +25,21 @@ public final class Task2 {
         // array element -> count
         // @todo Possible its better to use large array with gaps here for performance ?
         final Map<Number, Integer> indexedArrayMap = new HashMap<>(array.length); // lets allocate memory for the worst scenario (no repeating numbers)
+        // O(n)
         for (int element : array) {
             int count = indexedArrayMap.getOrDefault(element, 0);
             indexedArrayMap.put(element, ++count);
         }
 
+        // O(n)
         for (int element : array) {
             int count = indexedArrayMap.getOrDefault( k - element, 0);
             if (count > 1 || (count == 1 && element+element != k)) { // Avoid adding same same element as complemantary pair to itself
                 results.add(new IntPair(element, k - element));
             }
         }
+
+        // = O(2n) = O(n)
 
         return results;
     }

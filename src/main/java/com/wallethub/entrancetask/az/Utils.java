@@ -1,5 +1,7 @@
 package com.wallethub.entrancetask.az;
 
+import com.sun.javafx.binding.StringFormatter;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Function;
@@ -8,6 +10,9 @@ import java.util.function.Function;
  * @author alexey.zakharchenko@incryptex.com
  */
 class Utils {
+    public static final String LINE_END = System.getProperty("line.separator");
+    public static final String USER_HOME = System.getProperty("user.home");
+
     /**
      * Writes message to output (console or log)
      * @param message Message string
@@ -15,6 +20,10 @@ class Utils {
     static void out(String message) {
         // To avoid extra dependencies which adds no value to the project I use std output not logging
         System.out.println(message);
+    }
+
+    static void out(String message, Object... args) {
+        out(StringFormatter.format(message, args).getValue());
     }
 
     /**
