@@ -1,10 +1,10 @@
 package com.wallethub.entrancetask.az;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Stream;
 
 import static com.wallethub.entrancetask.az.Utils.out;
 import static com.wallethub.entrancetask.az.Utils.t;
@@ -31,8 +31,7 @@ public class Task3 {
     public static List<PhraseCount> topStrings(File file, int top) throws IOException {
         if (top < 1)
             return Collections.emptyList();
-//        Map<String, Long> collect =
-//                wordsList.stream().collect(groupingBy(Function.identity(), counting());
+
         long start = t();
         Collection<File> parts = split(file);
         out("Splitting into %s parts took %s ms", parts.size(), (t() - start));
@@ -45,10 +44,6 @@ public class Task3 {
         out("Count from parts took took %s ms", (t() - start2));
         out("Total time for %s top phrases is %s ms", top, (t() - start));
 
-        // Count just numbers! Then having a threshold, run third iteration to get strings with num > threshold
-
-
-//        return countedParts.toArray(new PhraseCount[countedParts.size()]);
         return countedParts;
     }
 
@@ -63,7 +58,6 @@ public class Task3 {
     private static Collection<File> split(File file) throws IOException {
         // Let's be paranoid and use twice less memory than max
         long memoryWeMayUse = MAX_MEM_AVAILABLE >> 1;
-//        long memoryWeMayUse = 512 * 1024;
 
         out("Total memory available: " + (MAX_MEM_AVAILABLE >> 20) + " Mb");
         out("Memory we may use: " + (memoryWeMayUse >> 20) + " Mb");
@@ -79,23 +73,24 @@ public class Task3 {
         final Collection<File> results = new HashSet<>(filesNumber);
         final Map<Integer, FileWriter> hashcode2WriterMap = new HashMap<>(filesNumber);
 
-//        final File dir = new File(file.getParentFile().getAbsoluteFile() + File.separator + "temp");
-//        dir.mkdirs();
-//        clearDir(dir);
-        final File dir = file.getParentFile().getAbsoluteFile();
-
+        final long start = t();
         try (Scanner scanner = new Scanner(file)) {
+            int i = 0;
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 Arrays.asList(line.split('\\' + SEP))
                         .forEach(phrase -> {
                                     // @todo Here, we may run out of disk space - handle it correctly
-                                    File partFile = writeToProperFile(phrase, hashcode2WriterMap, filesNumber, dir);
+                                    File partFile = writeToProperFile(phrase, hashcode2WriterMap, filesNumber);
                                     if (partFile != null) {
                                         results.add(partFile);
                                     }
                                 }
                         );
+
+                if (++i % 100_000 == 0)
+                    out("Processed %s lines in %s secs", i, (t() - start)/1000);
+
             }
         } finally {
             hashcode2WriterMap.entrySet().forEach(e -> {
@@ -148,13 +143,14 @@ public class Task3 {
         return finalResult;
     }
 
-    private static File writeToProperFile(String phrase, Map<Integer, FileWriter> hashcode2WriterMap, int filesNumber, File dir) {
+    private static File writeToProperFile(String phrase, Map<Integer, FileWriter> hashcode2WriterMap, int filesNumber) {
         File file = null;
         int number = Math.abs(phrase.hashCode() % filesNumber); // Don't need negative hashcodes
         try {
             FileWriter fw = hashcode2WriterMap.get(number);
             if (fw == null) {
                 file = File.createTempFile("part", "count");
+                file.deleteOnExit();
                 fw = new FileWriter(file);
                 hashcode2WriterMap.put(number, fw);
             }
@@ -206,16 +202,5 @@ public class Task3 {
         public String toString() {
             return "PC {" + phrase + " => " + count + '}';
         }
-    }
-
-    public static void main(String[] args) throws IOException {
-//        List<PhraseCount> list = topStrings(new File(Utils.USER_HOME + File.separator + "mediumfile.txt"), 700);
-        List<PhraseCount> list = topStrings(new File(Utils.USER_HOME + File.separator + "largefile.txt"), 100);
-
-        for (int i = 0; i < list.size(); i++) {
-            out((i+1) + "\t\t" + list.get(i) );
-        }
-
-        //out(Utils.s(list));
     }
 }

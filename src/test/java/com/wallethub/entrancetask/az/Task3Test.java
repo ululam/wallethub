@@ -14,6 +14,8 @@ import java.util.List;
 
 import static com.wallethub.entrancetask.az.Task3.SEP;
 import static com.wallethub.entrancetask.az.Task3.topStrings;
+import static com.wallethub.entrancetask.az.Utils.out;
+import static com.wallethub.entrancetask.az.Utils.t;
 import static org.testng.Assert.*;
 
 /**
@@ -24,6 +26,7 @@ public class Task3Test {
     @Test
     public void testTopStrings() throws Exception {
         File file = File.createTempFile("phrase", "count");
+        file.deleteOnExit();
         try (FileWriter fw = new FileWriter(file)) {
             fw.write("One one one"); fw.write(SEP);
             fw.write("Two"); fw.write(SEP);
@@ -68,11 +71,23 @@ public class Task3Test {
         file.delete();
     }
 
-    public void integerationTestOnHugeFile() throws Exception {
+    @Test(enabled = false, groups = "Integration")
+    public void integrationTestOnHugeFile() throws Exception {
         File file = new File(Utils.USER_HOME + File.separator + "largefile.txt");
-        prepareLargeFile(file);
 
-        topStrings(file, 100_000);
+        if (!file.exists())
+            prepareLargeFile(file); // Very slow operation
+
+        long start = t();
+        int top = 100_000;
+        List<PhraseCount> list = topStrings(file, top);
+        out("Got top %s phrases in %s ms", top, (t() - start));
+        out("Printing first 100 of them");
+        for (int i = 0; i < 100; i++) {
+            out((i+1) + "\t\t" + list.get(i) );
+        }
+
+        assertEquals(list.size(), top);
     }
 
     private static final String[] STRINGS = {
@@ -86,30 +101,26 @@ public class Task3Test {
         System.out.println("Writing to " + file.getAbsolutePath());
         file.getParentFile().mkdirs();
 
+        final long start = t();
         try (FileWriter fw = new FileWriter(file)) {
             List<String> tokens = new ArrayList<>(50);
             for (int i = 1; i < 200_000_000; i++) {
                 int index = RandomUtils.nextInt(2);
-                int suffix = RandomUtils.nextInt(500);
+                int suffix = RandomUtils.nextInt(100_000); // Provide enough cardinality
                 tokens.add(STRINGS[index] + suffix);
                 if (i%51 == 0) {
-                    fw.write(String.join("|", tokens) + Utils.LINE_END);
+                    fw.write(String.join("|", tokens));
+                    fw.write(Utils.LINE_END);
                     tokens.clear();
                 }
 
 
                 if (i%10_000_000 == 0)
-                    System.out.println("Wrote " + i);
-
+                    out("Wrote %s, time passed %s ms, %s records per second", i, (t() - start), (long)i*1000/(t() - start));
             }
 
         }
 
     }
 
-
-    public static void main(String[] args) throws IOException {
-        prepareLargeFile(new File(Utils.USER_HOME + File.separator + "largefile.txt"));
-//        prepareLargeFile(new File(Utils.USER_HOME + File.separator + "mediumfile.txt"));
-    }
 }
