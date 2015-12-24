@@ -3,16 +3,18 @@ package com.wallethub.entrancetask.az;
 import com.wallethub.entrancetask.az.Task2.IntPair;
 import org.testng.annotations.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static com.wallethub.entrancetask.az.Task2.findKComplementary;
 import static com.wallethub.entrancetask.az.TestUtils.eq;
-import static com.wallethub.entrancetask.az.Utils.*;
+import static com.wallethub.entrancetask.az.Utils.s;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Integer.MIN_VALUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author alexey.zakharchenko@incryptex.com

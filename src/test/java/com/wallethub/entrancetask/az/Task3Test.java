@@ -1,8 +1,6 @@
 package com.wallethub.entrancetask.az;
 
-import com.sun.xml.internal.ws.client.SEIPortInfo;
 import com.wallethub.entrancetask.az.Task3.PhraseCount;
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.testng.annotations.Test;
 
@@ -16,7 +14,8 @@ import static com.wallethub.entrancetask.az.Task3.SEP;
 import static com.wallethub.entrancetask.az.Task3.topStrings;
 import static com.wallethub.entrancetask.az.Utils.out;
 import static com.wallethub.entrancetask.az.Utils.t;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author alexey.zakharchenko@incryptex.com

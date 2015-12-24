@@ -6,9 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.wallethub.entrancetask.az.Task1.commonBoundariesCheck;
-import static com.wallethub.entrancetask.az.Task1.isPalindrome;
-import static com.wallethub.entrancetask.az.Task1.isPalindromeEfficient;
+import static com.wallethub.entrancetask.az.Task1.*;
 import static com.wallethub.entrancetask.az.TestUtils.generateStringCollection;
 import static com.wallethub.entrancetask.az.Utils.out;
 import static com.wallethub.entrancetask.az.Utils.t;

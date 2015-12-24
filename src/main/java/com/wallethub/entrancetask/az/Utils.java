@@ -2,9 +2,7 @@ package com.wallethub.entrancetask.az;
 
 import com.sun.javafx.binding.StringFormatter;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.function.Function;
 
 /**
  * @author alexey.zakharchenko@incryptex.com
